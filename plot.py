@@ -32,14 +32,16 @@ def main():
 
     def size_formatter(x, pos):
         if x >= 1024 * 1024:
-            return f'{x / (1024 * 1024):.0f} Megabyte'
+            return f'{x / (1024 * 1024):.0f} MB'
         elif x >= 1024:
-            return f'{x / 1024:.0f} Kilobyte'
+            return f'{x / 1024:.0f} KB'
         else:
-            return f'{x:.0f} Byte'
+            return f'{x:.0f} B'
 
     ax.set_xscale('log', base=2)
+    ax.xaxis.set_major_locator(ticker.FixedLocator(stats['size'].values))
     ax.xaxis.set_major_formatter(ticker.FuncFormatter(size_formatter))
+    plt.setp(ax.get_xticklabels(), rotation=45, ha='right')
     ax.set_xlabel("Message Size")
     ax.set_ylabel("Bandwidth (MB/s)")
     ax.set_title(config.get("title", "MPI Bandwidth vs. Message Size"))
