@@ -18,23 +18,23 @@ mkdir -p "$LOG_DIR"
 # Copy config to log directory
 cp config.yml "$LOG_DIR/config.yml"
 
-# Read number of plot sections from config
-NUM_PLOTS=$(conda run -n "$ENV_NAME" python -c "
+# Read plot names from config
+PLOT_NAMES=$(conda run -n "$ENV_NAME" python -c "
 import yaml
 with open('config.yml') as f:
     config = yaml.safe_load(f)
-print(len(config['plots']))
+for name in config['plots']:
+    print(name)
 ")
 
 # Loop over each plot section
-for i in $(seq 0 $((NUM_PLOTS - 1))); do
+for NAME in $PLOT_NAMES; do
     # Extract plot config fields
     eval "$(conda run -n "$ENV_NAME" python -c "
 import yaml, shlex
 with open('config.yml') as f:
     config = yaml.safe_load(f)
-p = config['plots'][$i]
-print(f'NAME={shlex.quote(p[\"name\"])}')
+p = config['plots']['$NAME']
 print(f'SCRIPT={shlex.quote(p[\"script\"])}')
 print(f'OUTPUT={shlex.quote(p.get(\"output\", \"plot.png\"))}')
 print(f'TITLE={shlex.quote(p.get(\"title\", \"\"))}')
