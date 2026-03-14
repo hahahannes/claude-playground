@@ -31,6 +31,15 @@ def parse_osu_log(filepath):
     return rows
 
 
+def match_value(params_val, filter_val):
+    """Recursively match a filter value against a params value."""
+    if isinstance(filter_val, dict):
+        if not isinstance(params_val, dict):
+            return False
+        return all(match_value(params_val.get(k), v) for k, v in filter_val.items())
+    return str(params_val) == str(filter_val)
+
+
 def find_matching_dirs(data_dir, filter_criteria):
     """Find subdirs whose params.json matches all filter criteria."""
     matching = []
@@ -40,7 +49,7 @@ def find_matching_dirs(data_dir, filter_criteria):
             continue
         with open(params_path) as f:
             params = json.load(f)
-        if all(str(params.get(k)) == str(v) for k, v in filter_criteria.items()):
+        if all(match_value(params.get(k), v) for k, v in filter_criteria.items()):
             matching.append(subdir)
     return matching
 
@@ -120,8 +129,11 @@ def main():
         print("No series defined, nothing to plot.")
         return
 
+    gpu_model = series_configs[0].get('filter', {}).get('NODE_SELECTOR', {}).get('nvidia.com/gpu.product', '')
+    suptitle = f"{args.title}\n{gpu_model}" if gpu_model else args.title
+
     fig, (ax_bw, ax_lat) = plt.subplots(2, 1, figsize=(10, 10))
-    fig.suptitle(args.title, fontsize=14)
+    fig.suptitle(suptitle, fontsize=14)
 
     print(f"Plotting bandwidth...")
     bw_ok = plot_subplot(ax_bw, series_configs, args.data_dir,
