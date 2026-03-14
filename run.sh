@@ -45,13 +45,16 @@ print(f'OUTPUT={shlex.quote(s.get(\"output\", \"plot.png\"))}')
 print(f'TITLE={shlex.quote(s.get(\"title\", \"\"))}')
 ")"
 
-        echo "Running $SCRIPT (data_dir=$DATA_DIR)..."
+        echo "Running $SCRIPT (data_dir=$DATA_DIR, index=$j)..."
         conda run -n "$ENV_NAME" python "$SCRIPT" \
             --data-dir "$DATA_DIR" \
             --output "$LOG_SUBDIR/$OUTPUT" \
             --title "$TITLE" \
-            > "$LOG_SUBDIR/${SCRIPT%.py}_stdout.log" 2> "$LOG_SUBDIR/${SCRIPT%.py}_stderr.log"
-        cat "$LOG_SUBDIR/${SCRIPT%.py}_stdout.log"
+            --config config.yml \
+            --section "$NAME" \
+            --index "$j" \
+            > "$LOG_SUBDIR/${SCRIPT%.py}_${j}_stdout.log" 2> "$LOG_SUBDIR/${SCRIPT%.py}_${j}_stderr.log"
+        cat "$LOG_SUBDIR/${SCRIPT%.py}_${j}_stdout.log"
 
         # Copy output plot to repo root
         cp "$LOG_SUBDIR/$OUTPUT" "$OUTPUT"

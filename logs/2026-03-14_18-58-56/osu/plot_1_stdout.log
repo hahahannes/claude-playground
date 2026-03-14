@@ -1,0 +1,8 @@
+Plotting bandwidth...
+  Warning: no matching dirs for 'Disabled GPUDirect P2P'
+  Warning: no matching dirs for 'Enabled GPUDirect P2P'
+Plotting latency...
+  Warning: no matching dirs for 'Disabled GPUDirect P2P'
+  Warning: no matching dirs for 'Enabled GPUDirect P2P'
+Saved plot to logs/2026-03-14_18-58-56/osu/intra_node_gpu.png
+
