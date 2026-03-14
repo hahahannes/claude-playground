@@ -30,4 +30,10 @@ cp "$LOG_DIR/bandwidth_plot.png" bandwidth_plot.png
 echo "Committing and pushing..."
 git add -A
 git commit -m "Update plot and logs"
+
+# Save the commit ID to the log directory
+git rev-parse HEAD > "$LOG_DIR/commit_id.txt"
+git add "$LOG_DIR/commit_id.txt"
+git commit --amend --no-edit
+
 git push origin master
