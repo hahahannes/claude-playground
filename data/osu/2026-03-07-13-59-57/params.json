@@ -1,0 +1,19 @@
+{
+    "CUDA_VISIBLE_DEVICES": "0",
+    "GPU_PER_WORKER": {
+        "nvidia.com/gpu": 1
+    },
+    "LABELS": {
+        "home-eos": "true",
+        "mount-eos": "true"
+    },
+    "NODE_SELECTOR": {
+        "nvidia.com/gpu.product": "NVIDIA-H100-80GB-HBM3"
+    },
+    "NUM_WORKERS": 2,
+    "OSU_ARGS": "D D",
+    "UCX_IB_GPU_DIRECT_RDMA": "no",
+    "UCX_TLS": "tcp,cuda",
+    "image": "registry.cern.ch/ngt/mpi:openmpi-4.1.1",
+    "slots_per_worker": 1
+}

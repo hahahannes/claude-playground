@@ -1,0 +1,31 @@
+[1,0]<stdout>:mpi-osu-benchmark-2026-03-07-14-21-59-launcher
+[1,0]<stdout>:/usr/local/mpi/bin/mpirun
+[1,1]<stdout>:mpi-osu-benchmark-2026-03-07-14-21-59-launcher
+[1,1]<stdout>:/usr/local/mpi/bin/mpirun
+[1,0]<stdout>:
+[1,0]<stdout>:# OSU MPI-CUDA Latency Test v7.5.2
+[1,0]<stdout>:# Datatype: MPI_CHAR.
+[1,0]<stdout>:# Size       Avg Latency(us)
+[1,0]<stdout>:1                      63.21
+[1,0]<stdout>:2                      29.65
+[1,0]<stdout>:4                      44.01
+[1,0]<stdout>:8                      25.64
+[1,0]<stdout>:16                     23.25
+[1,0]<stdout>:32                     21.66
+[1,0]<stdout>:64                     21.82
+[1,0]<stdout>:128                    93.08
+[1,0]<stdout>:256                    21.46
+[1,0]<stdout>:512                    20.47
+[1,0]<stdout>:1024                   20.16
+[1,0]<stdout>:2048                   28.28
+[1,0]<stdout>:4096                   64.78
+[1,0]<stdout>:8192                   66.52
+[1,0]<stdout>:16384                  59.24
+[1,0]<stdout>:32768                 107.04
+[1,0]<stdout>:65536                 516.90
+[1,0]<stdout>:131072                435.15
+[1,0]<stdout>:262144                603.72
+[1,0]<stdout>:524288                557.81
+[1,0]<stdout>:1048576               622.08
+[1,0]<stdout>:2097152               707.32
+[1,0]<stdout>:4194304              1021.51

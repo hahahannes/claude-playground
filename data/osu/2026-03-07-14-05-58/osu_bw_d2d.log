@@ -1,0 +1,31 @@
+[1,1]<stdout>:mpi-osu-benchmark-2026-03-07-14-05-58-launcher
+[1,1]<stdout>:/usr/local/mpi/bin/mpirun
+[1,0]<stdout>:mpi-osu-benchmark-2026-03-07-14-05-58-launcher
+[1,0]<stdout>:/usr/local/mpi/bin/mpirun
+[1,0]<stdout>:
+[1,0]<stdout>:# OSU MPI-CUDA Bandwidth Test v7.5.2
+[1,0]<stdout>:# Datatype: MPI_CHAR.
+[1,0]<stdout>:# Size      Bandwidth (MB/s)
+[1,0]<stdout>:1                       1.70
+[1,0]<stdout>:2                       3.44
+[1,0]<stdout>:4                       6.89
+[1,0]<stdout>:8                      13.82
+[1,0]<stdout>:16                     27.44
+[1,0]<stdout>:32                     54.22
+[1,0]<stdout>:64                     91.85
+[1,0]<stdout>:128                   168.92
+[1,0]<stdout>:256                   341.00
+[1,0]<stdout>:512                   659.56
+[1,0]<stdout>:1024                 1293.22
+[1,0]<stdout>:2048                 2176.28
+[1,0]<stdout>:4096                 3236.34
+[1,0]<stdout>:8192                 4589.91
+[1,0]<stdout>:16384               20349.81
+[1,0]<stdout>:32768               32108.82
+[1,0]<stdout>:65536               42946.88
+[1,0]<stdout>:131072              46254.32
+[1,0]<stdout>:262144              48453.86
+[1,0]<stdout>:524288              49226.11
+[1,0]<stdout>:1048576             49572.76
+[1,0]<stdout>:2097152             49686.41
+[1,0]<stdout>:4194304             49733.93

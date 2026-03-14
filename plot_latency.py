@@ -38,14 +38,14 @@ def load_osu_logs(data_dir, log_name, columns):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Plot MPI bandwidth data")
+    parser = argparse.ArgumentParser(description="Plot MPI latency data")
     parser.add_argument("--data-dir", required=True, help="Directory containing data files")
-    parser.add_argument("--output", default="bandwidth_plot.png", help="Output file path")
-    parser.add_argument("--title", default="MPI Bandwidth vs. Message Size", help="Plot title")
+    parser.add_argument("--output", default="latency_plot.png", help="Output file path")
+    parser.add_argument("--title", default="MPI Latency vs. Message Size", help="Plot title")
     args = parser.parse_args()
 
-    combined = load_osu_logs(args.data_dir, 'osu_bw_d2d.log', ['size', 'bandwidth'])
-    stats = combined.groupby('size')['bandwidth'].agg(['mean', 'std']).reset_index()
+    combined = load_osu_logs(args.data_dir, 'osu_latency_d2d.log', ['size', 'latency'])
+    stats = combined.groupby('size')['latency'].agg(['mean', 'std']).reset_index()
 
     fig, ax = plt.subplots(figsize=(10, 6))
 
@@ -69,7 +69,7 @@ def main():
     ax.xaxis.set_major_formatter(ticker.FuncFormatter(size_formatter))
     plt.setp(ax.get_xticklabels(), rotation=45, ha='right')
     ax.set_xlabel("Message Size")
-    ax.set_ylabel("Bandwidth (MB/s)")
+    ax.set_ylabel("Avg Latency (us)")
     ax.set_title(args.title)
     ax.legend()
 
