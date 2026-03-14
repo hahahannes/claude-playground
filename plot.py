@@ -1,4 +1,6 @@
 import argparse
+import glob
+import os
 import yaml
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -7,15 +9,18 @@ import matplotlib.ticker as ticker
 
 def main():
     parser = argparse.ArgumentParser(description="Plot MPI bandwidth data")
-    parser.add_argument("--config", default="config.yml", help="Path to config file")
+    parser.add_argument("--data-dir", required=True, help="Directory containing data files")
+    parser.add_argument("--output", default="bandwidth_plot.png", help="Output file path")
+    parser.add_argument("--title", default="MPI Bandwidth vs. Message Size", help="Plot title")
     args = parser.parse_args()
 
-    with open(args.config) as f:
-        config = yaml.safe_load(f)
+    files = sorted(glob.glob(os.path.join(args.data_dir, "*.txt")))
+    if not files:
+        raise FileNotFoundError(f"No .txt files found in {args.data_dir}")
 
     frames = []
-    for dataset in config["datasets"]:
-        df = pd.read_csv(dataset["file"], sep=r'\s+', comment='#', names=['size', 'bandwidth'])
+    for filepath in files:
+        df = pd.read_csv(filepath, sep=r'\s+', comment='#', names=['size', 'bandwidth'])
         frames.append(df)
 
     combined = pd.concat(frames)
@@ -44,12 +49,11 @@ def main():
     plt.setp(ax.get_xticklabels(), rotation=45, ha='right')
     ax.set_xlabel("Message Size")
     ax.set_ylabel("Bandwidth (MB/s)")
-    ax.set_title(config.get("title", "MPI Bandwidth vs. Message Size"))
+    ax.set_title(args.title)
     ax.legend()
 
-    output = config.get("output", "bandwidth_plot.png")
-    plt.savefig(output, dpi=150, bbox_inches='tight')
-    print(f"Saved plot to {output}")
+    plt.savefig(args.output, dpi=150, bbox_inches='tight')
+    print(f"Saved plot to {args.output}")
 
 
 if __name__ == "__main__":
