@@ -15,10 +15,16 @@ fi
 LOG_DIR="logs/$(date '+%Y-%m-%d_%H-%M-%S')"
 mkdir -p "$LOG_DIR"
 
+# Create a config that outputs into the log directory
+sed "s|output:.*|output: ${LOG_DIR}/bandwidth_plot.png|" config.yml > "$LOG_DIR/config.yml"
+
 # Run plot.py and capture output
 echo "Running plot.py..."
-conda run -n "$ENV_NAME" python plot.py > "$LOG_DIR/stdout.log" 2> "$LOG_DIR/stderr.log"
+conda run -n "$ENV_NAME" python plot.py --config "$LOG_DIR/config.yml" > "$LOG_DIR/stdout.log" 2> "$LOG_DIR/stderr.log"
 cat "$LOG_DIR/stdout.log"
+
+# Copy plot to repo root as well
+cp "$LOG_DIR/bandwidth_plot.png" bandwidth_plot.png
 
 # Commit and push
 echo "Committing and pushing..."
