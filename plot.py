@@ -112,14 +112,7 @@ def plot_subplot(ax, series_configs, data_dir, log_name, columns, ylabel, y_scal
         ax.set_ylabel(ylabel)
         ax.legend(fontsize=8)
 
-        # Secondary y-axis with log scale
-        ax2 = ax.twinx()
-        for stats, line in plotted_data:
-            ax2.plot(stats[columns[0]], stats['mean'], '-o', markersize=4,
-                     color=line.get_color(), alpha=0.0)  # invisible, just to sync axis
-        ax2.set_yscale('log')
-        ax2.set_ylabel(f"{ylabel} (log scale)")
-    return has_data
+    return has_data, plotted_data
 
 
 def main():
@@ -144,21 +137,51 @@ def main():
     gpu_model = series_configs[0].get('filter', {}).get('NODE_SELECTOR', {}).get('nvidia.com/gpu.product', '')
     suptitle = f"{args.title}\n{gpu_model}" if gpu_model else args.title
 
-    fig, (ax_bw, ax_lat) = plt.subplots(2, 1, figsize=(10, 10))
+    fig, ((ax_bw, ax_bw_log), (ax_lat, ax_lat_log)) = plt.subplots(2, 2, figsize=(16, 10))
     fig.suptitle(suptitle, fontsize=14)
 
     print(f"Plotting bandwidth...")
-    bw_ok = plot_subplot(ax_bw, series_configs, args.data_dir,
+    bw_ok, bw_data = plot_subplot(ax_bw, series_configs, args.data_dir,
                          'osu_bw_d2d.log', ['size', 'bandwidth'], 'Bandwidth (GB/s)',
                          y_scale=1.0 / 1024)
     if bw_ok:
         ax_bw.set_title("Bandwidth")
+        # Log-scale version
+        for stats, line in bw_data:
+            ax_bw_log.plot(stats['size'], stats['mean'], '-o', markersize=4,
+                           color=line.get_color(), label=line.get_label())
+            ax_bw_log.fill_between(stats['size'], stats['mean'] - stats['std'],
+                                   stats['mean'] + stats['std'], alpha=0.15,
+                                   color=line.get_color())
+        ax_bw_log.set_xscale('log', base=2)
+        ax_bw_log.set_yscale('log')
+        ax_bw_log.xaxis.set_major_formatter(ticker.FuncFormatter(size_formatter))
+        plt.setp(ax_bw_log.get_xticklabels(), rotation=45, ha='right')
+        ax_bw_log.set_xlabel("Message Size")
+        ax_bw_log.set_ylabel("Bandwidth (GB/s)")
+        ax_bw_log.set_title("Bandwidth (log scale)")
+        ax_bw_log.legend(fontsize=8)
 
     print(f"Plotting latency...")
-    lat_ok = plot_subplot(ax_lat, series_configs, args.data_dir,
+    lat_ok, lat_data = plot_subplot(ax_lat, series_configs, args.data_dir,
                           'osu_latency_d2d.log', ['size', 'latency'], 'Avg Latency (us)')
     if lat_ok:
         ax_lat.set_title("Latency")
+        # Log-scale version
+        for stats, line in lat_data:
+            ax_lat_log.plot(stats['size'], stats['mean'], '-o', markersize=4,
+                            color=line.get_color(), label=line.get_label())
+            ax_lat_log.fill_between(stats['size'], stats['mean'] - stats['std'],
+                                    stats['mean'] + stats['std'], alpha=0.15,
+                                    color=line.get_color())
+        ax_lat_log.set_xscale('log', base=2)
+        ax_lat_log.set_yscale('log')
+        ax_lat_log.xaxis.set_major_formatter(ticker.FuncFormatter(size_formatter))
+        plt.setp(ax_lat_log.get_xticklabels(), rotation=45, ha='right')
+        ax_lat_log.set_xlabel("Message Size")
+        ax_lat_log.set_ylabel("Avg Latency (us)")
+        ax_lat_log.set_title("Latency (log scale)")
+        ax_lat_log.legend(fontsize=8)
 
     plt.tight_layout()
     plt.savefig(args.output, dpi=150, bbox_inches='tight')

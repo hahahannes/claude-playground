@@ -55,9 +55,6 @@ print(f'TITLE={shlex.quote(s.get(\"title\", \"\"))}')
             --index "$j" \
             > "$LOG_SUBDIR/${SCRIPT%.py}_${j}_stdout.log" 2> "$LOG_SUBDIR/${SCRIPT%.py}_${j}_stderr.log"
         cat "$LOG_SUBDIR/${SCRIPT%.py}_${j}_stdout.log"
-
-        # Copy output plot to repo root
-        cp "$LOG_SUBDIR/$OUTPUT" "$OUTPUT"
     done
 done
 
