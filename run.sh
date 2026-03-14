@@ -17,6 +17,6 @@ conda run -n "$ENV_NAME" python plot.py 2>&1 | tee output.log
 
 # Commit and push
 echo "Committing and pushing..."
-git add plot.py bandwidth_plot.png output.log environment.yml run.sh
+git add -A
 git commit -m "Update plot and logs"
 git push origin master
