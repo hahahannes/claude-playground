@@ -11,9 +11,14 @@ else
     echo "Conda environment '${ENV_NAME}' already exists."
 fi
 
+# Create timestamped log directory
+LOG_DIR="logs/$(date '+%Y-%m-%d_%H-%M-%S')"
+mkdir -p "$LOG_DIR"
+
 # Run plot.py and capture output
 echo "Running plot.py..."
-conda run -n "$ENV_NAME" python plot.py 2>&1 | tee output.log
+conda run -n "$ENV_NAME" python plot.py > "$LOG_DIR/stdout.log" 2> "$LOG_DIR/stderr.log"
+cat "$LOG_DIR/stdout.log"
 
 # Commit and push
 echo "Committing and pushing..."
