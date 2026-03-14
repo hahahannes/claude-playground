@@ -2,6 +2,7 @@ import argparse
 import yaml
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 
 
 def main():
@@ -29,8 +30,17 @@ def main():
     ax.fill_between(stats['size'], stats['mean'] - stats['std'],
                     stats['mean'] + stats['std'], alpha=0.2, label='Std Dev')
 
+    def size_formatter(x, pos):
+        if x >= 1024 * 1024:
+            return f'{x / (1024 * 1024):.0f} MB'
+        elif x >= 1024:
+            return f'{x / 1024:.0f} KB'
+        else:
+            return f'{x:.0f} B'
+
     ax.set_xscale('log', base=2)
-    ax.set_xlabel("Message Size (Bytes)")
+    ax.xaxis.set_major_formatter(ticker.FuncFormatter(size_formatter))
+    ax.set_xlabel("Message Size")
     ax.set_ylabel("Bandwidth (MB/s)")
     ax.set_title(config.get("title", "MPI Bandwidth vs. Message Size"))
     ax.legend()
