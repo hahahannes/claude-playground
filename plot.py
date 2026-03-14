@@ -25,8 +25,9 @@ def main():
     # Mean: scatter + line
     ax.plot(stats['size'], stats['mean'], '-o', markersize=5, label='Mean')
 
-    # Std: scatter + line
-    ax.plot(stats['size'], stats['std'], '--s', markersize=5, label='Std Dev')
+    # Std deviation as shaded band
+    ax.fill_between(stats['size'], stats['mean'] - stats['std'],
+                    stats['mean'] + stats['std'], alpha=0.2, label='Std Dev')
 
     ax.set_xscale('log', base=2)
     ax.set_xlabel("Message Size (Bytes)")
