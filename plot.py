@@ -21,15 +21,18 @@ def main():
     stats = combined.groupby('size')['bandwidth'].agg(['mean', 'std']).reset_index()
 
     fig, ax = plt.subplots(figsize=(10, 6))
-    ax.errorbar(
-        stats['size'], stats['mean'], yerr=stats['std'],
-        fmt='o', capsize=4, elinewidth=1.2, markersize=5
-    )
+
+    # Mean: scatter + line
+    ax.plot(stats['size'], stats['mean'], '-o', markersize=5, label='Mean')
+
+    # Std: scatter + line
+    ax.plot(stats['size'], stats['std'], '--s', markersize=5, label='Std Dev')
 
     ax.set_xscale('log', base=2)
     ax.set_xlabel("Message Size (Bytes)")
     ax.set_ylabel("Bandwidth (MB/s)")
     ax.set_title(config.get("title", "MPI Bandwidth vs. Message Size"))
+    ax.legend()
 
     output = config.get("output", "bandwidth_plot.png")
     plt.savefig(output, dpi=150, bbox_inches='tight')
