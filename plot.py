@@ -2,7 +2,6 @@ import argparse
 import yaml
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
 
 
 def main():
@@ -13,19 +12,24 @@ def main():
     with open(args.config) as f:
         config = yaml.safe_load(f)
 
-    fig, ax = plt.subplots(figsize=(10, 6))
-
+    frames = []
     for dataset in config["datasets"]:
-        file = dataset["file"]
-        label = dataset.get("label", file)
-        df = pd.read_csv(file, sep=r'\s+', comment='#', names=['size', 'bandwidth'])
-        sns.lineplot(data=df, x='size', y='bandwidth', label=label, ax=ax)
+        df = pd.read_csv(dataset["file"], sep=r'\s+', comment='#', names=['size', 'bandwidth'])
+        frames.append(df)
+
+    combined = pd.concat(frames)
+    stats = combined.groupby('size')['bandwidth'].agg(['mean', 'std']).reset_index()
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.errorbar(
+        stats['size'], stats['mean'], yerr=stats['std'],
+        fmt='o', capsize=4, elinewidth=1.2, markersize=5
+    )
 
     ax.set_xscale('log', base=2)
     ax.set_xlabel("Message Size (Bytes)")
     ax.set_ylabel("Bandwidth (MB/s)")
     ax.set_title(config.get("title", "MPI Bandwidth vs. Message Size"))
-    ax.legend()
 
     output = config.get("output", "bandwidth_plot.png")
     plt.savefig(output, dpi=150, bbox_inches='tight')
