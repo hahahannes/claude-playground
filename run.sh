@@ -34,14 +34,14 @@ import yaml, shlex
 with open('config.yml') as f:
     config = yaml.safe_load(f)
 p = config['plots'][$i]
+print(f'NAME={shlex.quote(p[\"name\"])}')
 print(f'SCRIPT={shlex.quote(p[\"script\"])}')
-print(f'DATA_DIR={shlex.quote(p[\"data_dir\"])}')
 print(f'OUTPUT={shlex.quote(p.get(\"output\", \"plot.png\"))}')
 print(f'TITLE={shlex.quote(p.get(\"title\", \"\"))}')
 ")"
 
-    SCRIPT_NAME=$(basename "$SCRIPT" .py)
-    LOG_SUBDIR="$LOG_DIR/$SCRIPT_NAME"
+    DATA_DIR="data/$NAME"
+    LOG_SUBDIR="$LOG_DIR/$NAME"
     mkdir -p "$LOG_SUBDIR"
 
     echo "Running $SCRIPT (data_dir=$DATA_DIR)..."
