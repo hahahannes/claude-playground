@@ -1,0 +1,10 @@
+name: claude-playground
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - seaborn
+  - matplotlib
+  - pandas
+  - pyyaml

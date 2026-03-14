@@ -1,0 +1,5 @@
+datasets:
+  - file: data.txt
+    label: data.txt
+output: bandwidth_plot.png
+title: "MPI Bandwidth vs. Message Size"
