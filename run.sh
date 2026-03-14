@@ -18,42 +18,44 @@ mkdir -p "$LOG_DIR"
 # Copy config to log directory
 cp config.yml "$LOG_DIR/config.yml"
 
-# Read plot names from config
-PLOT_NAMES=$(conda run -n "$ENV_NAME" python -c "
+# Read plot section names and script counts from config
+PLOT_ENTRIES=$(conda run -n "$ENV_NAME" python -c "
 import yaml
 with open('config.yml') as f:
     config = yaml.safe_load(f)
-for name in config['plots']:
-    print(name)
+for name, section in config['plots'].items():
+    print(f'{name} {len(section[\"scripts\"])}')
 ")
 
 # Loop over each plot section
-for NAME in $PLOT_NAMES; do
-    # Extract plot config fields
-    eval "$(conda run -n "$ENV_NAME" python -c "
-import yaml, shlex
-with open('config.yml') as f:
-    config = yaml.safe_load(f)
-p = config['plots']['$NAME']
-print(f'SCRIPT={shlex.quote(p[\"script\"])}')
-print(f'OUTPUT={shlex.quote(p.get(\"output\", \"plot.png\"))}')
-print(f'TITLE={shlex.quote(p.get(\"title\", \"\"))}')
-")"
-
+echo "$PLOT_ENTRIES" | while read NAME NUM_SCRIPTS; do
     DATA_DIR="data/$NAME"
     LOG_SUBDIR="$LOG_DIR/$NAME"
     mkdir -p "$LOG_SUBDIR"
 
-    echo "Running $SCRIPT (data_dir=$DATA_DIR)..."
-    conda run -n "$ENV_NAME" python "$SCRIPT" \
-        --data-dir "$DATA_DIR" \
-        --output "$LOG_SUBDIR/$OUTPUT" \
-        --title "$TITLE" \
-        > "$LOG_SUBDIR/stdout.log" 2> "$LOG_SUBDIR/stderr.log"
-    cat "$LOG_SUBDIR/stdout.log"
+    for j in $(seq 0 $((NUM_SCRIPTS - 1))); do
+        # Extract script config fields
+        eval "$(conda run -n "$ENV_NAME" python -c "
+import yaml, shlex
+with open('config.yml') as f:
+    config = yaml.safe_load(f)
+s = config['plots']['$NAME']['scripts'][$j]
+print(f'SCRIPT={shlex.quote(s[\"script\"])}')
+print(f'OUTPUT={shlex.quote(s.get(\"output\", \"plot.png\"))}')
+print(f'TITLE={shlex.quote(s.get(\"title\", \"\"))}')
+")"
 
-    # Copy output plot to repo root
-    cp "$LOG_SUBDIR/$OUTPUT" "$OUTPUT"
+        echo "Running $SCRIPT (data_dir=$DATA_DIR)..."
+        conda run -n "$ENV_NAME" python "$SCRIPT" \
+            --data-dir "$DATA_DIR" \
+            --output "$LOG_SUBDIR/$OUTPUT" \
+            --title "$TITLE" \
+            > "$LOG_SUBDIR/${SCRIPT%.py}_stdout.log" 2> "$LOG_SUBDIR/${SCRIPT%.py}_stderr.log"
+        cat "$LOG_SUBDIR/${SCRIPT%.py}_stdout.log"
+
+        # Copy output plot to repo root
+        cp "$LOG_SUBDIR/$OUTPUT" "$OUTPUT"
+    done
 done
 
 # Commit and push
