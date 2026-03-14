@@ -32,11 +32,11 @@ def main():
 
     def size_formatter(x, pos):
         if x >= 1024 * 1024:
-            return f'{x / (1024 * 1024):.0f} MB'
+            return f'{x / (1024 * 1024):.0f} Megabyte'
         elif x >= 1024:
-            return f'{x / 1024:.0f} KB'
+            return f'{x / 1024:.0f} Kilobyte'
         else:
-            return f'{x:.0f} B'
+            return f'{x:.0f} Byte'
 
     ax.set_xscale('log', base=2)
     ax.xaxis.set_major_formatter(ticker.FuncFormatter(size_formatter))
