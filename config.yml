@@ -69,3 +69,9 @@ plots:
               UCX_IB_GPU_DIRECT_RDMA: "no"
               NODE_SELECTOR:
                 "nvidia.com/gpu.product": "NVIDIA-H100-80GB-HBM3"
+  acorn:
+    scripts:
+      - script: plot_throughput.py
+        output: throughput_vs_gpus.png
+        title: "ACORN Training Throughput"
+        gpu_model: "NVIDIA-H100-NVL"
