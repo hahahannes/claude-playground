@@ -64,7 +64,7 @@ def collect_throughput_data(data_dir):
 
 
 def plot_throughput(df, output_path, title, gpu_model):
-    """Create a throughput plot: GPUs vs events/second."""
+    """Create a scatter throughput plot: GPUs vs events/second."""
     stats = df.groupby("gpu_count")["events_per_second"].agg(["mean", "std"]).reset_index()
     stats = stats.sort_values("gpu_count")
 
@@ -73,26 +73,33 @@ def plot_throughput(df, output_path, title, gpu_model):
     suptitle = f"{title}\n{gpu_model}" if gpu_model else title
     fig.suptitle(suptitle, fontsize=14)
 
-    ax.bar(
-        stats["gpu_count"].astype(str),
-        stats["mean"],
-        yerr=stats["std"],
-        capsize=5,
+    # Scatter individual data points
+    ax.scatter(
+        df["gpu_count"],
+        df["events_per_second"],
+        alpha=0.3,
+        s=20,
         color="#4C72B0",
-        edgecolor="black",
-        alpha=0.85,
+        zorder=2,
     )
 
-    # Annotate bars with mean value
-    for _, row in stats.iterrows():
-        ax.text(
-            str(int(row["gpu_count"])),
-            row["mean"] + row["std"] + 0.3,
-            f'{row["mean"]:.1f}',
-            ha="center",
-            va="bottom",
-            fontsize=10,
-        )
+    # Mean line with markers and std band (OSU style)
+    ax.plot(
+        stats["gpu_count"],
+        stats["mean"],
+        "-o",
+        markersize=4,
+        color="#4C72B0",
+        label="Mean throughput",
+        zorder=3,
+    )
+    ax.fill_between(
+        stats["gpu_count"],
+        stats["mean"] - stats["std"],
+        stats["mean"] + stats["std"],
+        alpha=0.15,
+        color="#4C72B0",
+    )
 
     ax.set_xlabel("Number of GPUs")
     ax.set_ylabel("Events per Second")
@@ -104,15 +111,15 @@ def plot_throughput(df, output_path, title, gpu_model):
         ideal_x = stats["gpu_count"].values
         ideal_y = base["mean"] * (ideal_x / base["gpu_count"].item())
         ax.plot(
-            [str(int(x)) for x in ideal_x],
+            ideal_x,
             ideal_y,
             "r--",
             marker="^",
             markersize=6,
             label="Ideal linear scaling",
         )
-        ax.legend()
 
+    ax.legend(fontsize=8)
     plt.tight_layout()
     plt.savefig(output_path, dpi=150, bbox_inches="tight")
     print(f"Saved plot to {output_path}")

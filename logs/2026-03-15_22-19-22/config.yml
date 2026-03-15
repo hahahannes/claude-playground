@@ -1,0 +1,77 @@
+plots:
+  osu:
+    scripts:
+      - script: plot/osu.py
+        output: inter_node_gpu.png
+        title: "Inter Node - GPU Memory"
+        series:
+          - legend: "Disabled GPUDirect/Host RDMA - Ethernet"
+            filter:
+              NUM_WORKERS: 2
+              UCX_TLS: "tcp,cuda"
+              OSU_ARGS: "D D"
+              UCX_IB_GPU_DIRECT_RDMA: "no"
+              NODE_SELECTOR:
+                "nvidia.com/gpu.product": "NVIDIA-H100-80GB-HBM3"
+          - legend: "Enabled GPUDirect RDMA - RoCEv2"
+            filter:
+              NUM_WORKERS: 2
+              UCX_TLS: "rc,cuda"
+              UCX_IB_GPU_DIRECT_RDMA: "yes"
+              OSU_ARGS: "D D"
+              NODE_SELECTOR:
+                "nvidia.com/gpu.product": "NVIDIA-H100-80GB-HBM3"
+          - legend: "Disabled GPUDirect RDMA - Enabled Host RDMA - RoCEv2"
+            filter:
+              NUM_WORKERS: 2
+              UCX_TLS: "rc,cuda"
+              UCX_IB_GPU_DIRECT_RDMA: "no"
+              OSU_ARGS: "D D"
+              NODE_SELECTOR:
+                "nvidia.com/gpu.product": "NVIDIA-H100-80GB-HBM3"
+      - script: plot/osu.py
+        output: intra_node_gpu.png
+        title: "Intra Node - GPU Memory"
+        series:
+          - legend: "Disabled GPUDirect P2P"
+            filter:
+              NUM_WORKERS: 1
+              UCX_TLS: "rc,cuda_copy"
+              OSU_ARGS: "D D"
+              UCX_IB_GPU_DIRECT_RDMA: "yes"
+              NODE_SELECTOR:
+                "nvidia.com/gpu.product": "NVIDIA-H100-80GB-HBM3"
+          - legend: "Enabled GPUDirect P2P"
+            filter:
+              NUM_WORKERS: 1
+              UCX_TLS: "rc,cuda_copy,cuda_ipc"
+              OSU_ARGS: "D D"
+              UCX_IB_GPU_DIRECT_RDMA: "yes"
+              NODE_SELECTOR:
+                "nvidia.com/gpu.product": "NVIDIA-H100-80GB-HBM3"
+      - script: plot/osu.py
+        output: inter_node_host.png
+        title: "Inter Node - Host Memory"
+        series:
+          - legend: "Ethernet"
+            filter:
+              NUM_WORKERS: 2
+              UCX_TLS: "tcp,cuda"
+              OSU_ARGS: "H H"
+              UCX_IB_GPU_DIRECT_RDMA: "no"
+              NODE_SELECTOR:
+                "nvidia.com/gpu.product": "NVIDIA-H100-80GB-HBM3"
+          - legend: "RoCEv2"
+            filter:
+              NUM_WORKERS: 2
+              UCX_TLS: "rc"
+              OSU_ARGS: "H H"
+              UCX_IB_GPU_DIRECT_RDMA: "no"
+              NODE_SELECTOR:
+                "nvidia.com/gpu.product": "NVIDIA-H100-80GB-HBM3"
+  acorn:
+    scripts:
+      - script: plot/throughput.py
+        output: throughput_vs_gpus.png
+        title: "ACORN Training Throughput"
+        gpu_model: "NVIDIA-H100-NVL"
