@@ -1,0 +1,78 @@
+accelerator: auto
+activation: Tanh
+data_split:
+- 80
+- 10
+- 10
+devices: 1
+emb_dim: 12
+emb_hidden: 1024
+factor: 0.7
+hard_cuts:
+  track_particle_pt:
+  - 1000.0
+  - .inf
+input_dir: /shared/ngt-benchmarks-v2/data/acorn/Example_3/feature_store/
+knn: 100
+knn_val: 1000
+log_wandb: false
+lr: 0.01
+margin: 0.1
+max_epochs: 100
+metric_mode: max
+metric_to_monitor: f1
+model: MetricLearning
+nb_layer: 4
+node_features:
+- hit_r
+- hit_phi
+- hit_z
+- hit_cell_count
+- hit_cell_val
+- hit_leta
+- hit_lphi
+- hit_lx
+- hit_ly
+- hit_lz
+- hit_geta
+- hit_gphi
+node_scales:
+- 1000
+- 3.14
+- 1000
+- 1
+- 1
+- 1
+- 1
+- 0.1
+- 1
+- 0.1
+- 1
+- 3.14
+nodes: 1
+patience: 10
+points_per_batch: 100000
+project: CF_Example_3_MetricLearning
+r_train: 0.1
+randomisation: 1
+stage: graph_construction
+stage_dir: /shared/ngt-benchmarks-v2/data/acorn/Example_3/metric_learning/
+train_undirected: true
+undirected: true
+warmup: 5
+weighting:
+- conditions:
+    edge_y: false
+  weight: 1.0
+- conditions:
+    edge_y: true
+  weight: 0.0
+- conditions:
+    edge_y: true
+    track_particle_nhits:
+    - 3.0
+    - .inf
+    track_particle_pt:
+    - 1000.0
+    - .inf
+  weight: 3.0

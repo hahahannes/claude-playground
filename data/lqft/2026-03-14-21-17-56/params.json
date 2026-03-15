@@ -1,0 +1,23 @@
+{
+    "CUDA_VISIBLE_DEVICES": "0",
+    "GPU_ARCH": "sm_90",
+    "GPU_PER_WORKER": {
+        "nvidia.com/gpu": 1
+    },
+    "ITERATIONS": 100,
+    "LABELS": {},
+    "NODE_SELECTOR": {
+        "nvidia.com/gpu.product": "NVIDIA-H100-NVL"
+    },
+    "NUM_WORKERS": 1,
+    "TDIM": 48,
+    "TGRID": 1,
+    "XDIM": 48,
+    "XGRID": 1,
+    "YDIM": 48,
+    "YGRID": 1,
+    "ZDIM": 48,
+    "ZGRID": 1,
+    "image": "registry.cern.ch/ngt/mpi:openmpi-4.1.1",
+    "slots_per_worker": 1
+}

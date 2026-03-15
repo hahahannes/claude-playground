@@ -1,0 +1,11 @@
+{
+    "CUDA_VISIBLE_DEVICES": "0",
+    "GPU_PER_WORKER": {
+        "nvidia.com/gpu": 4
+    },
+    "LABELS": {},
+    "NODE_SELECTOR": {
+        "nvidia.com/gpu.product": "NVIDIA-H100-NVL"
+    },
+    "NUM_WORKERS": 1
+}
