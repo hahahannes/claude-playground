@@ -1,0 +1,5 @@
+Collecting throughput data...
+  Skipping 2026-03-15-17-52-28: no lightning_logs
+Found data for GPU counts: [np.int64(1), np.int64(2)]
+Saved plot to logs/2026-03-15_22-19-22/acorn/throughput_vs_gpus.png
+
