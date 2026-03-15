@@ -45,6 +45,7 @@ print(f'OUTPUT={shlex.quote(s.get(\"output\", \"plot.png\"))}')
 print(f'TITLE={shlex.quote(s.get(\"title\", \"\"))}')
 ")"
 
+        SCRIPT_BASE="$(basename "${SCRIPT%.py}")"
         echo "Running $SCRIPT (data_dir=$DATA_DIR, index=$j)..."
         conda run -n "$ENV_NAME" python "$SCRIPT" \
             --data-dir "$DATA_DIR" \
@@ -53,8 +54,8 @@ print(f'TITLE={shlex.quote(s.get(\"title\", \"\"))}')
             --config config.yml \
             --section "$NAME" \
             --index "$j" \
-            > "$LOG_SUBDIR/${SCRIPT%.py}_${j}_stdout.log" 2> "$LOG_SUBDIR/${SCRIPT%.py}_${j}_stderr.log"
-        cat "$LOG_SUBDIR/${SCRIPT%.py}_${j}_stdout.log"
+            > "$LOG_SUBDIR/${SCRIPT_BASE}_${j}_stdout.log" 2> "$LOG_SUBDIR/${SCRIPT_BASE}_${j}_stderr.log"
+        cat "$LOG_SUBDIR/${SCRIPT_BASE}_${j}_stdout.log"
     done
 done
 

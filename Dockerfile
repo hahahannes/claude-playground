@@ -10,9 +10,11 @@ RUN useradd --create-home appuser
 WORKDIR /app
 
 COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
-COPY plot.py plot_throughput.py test_plot_throughput.py config.yml ./
+COPY plot/ plot/
+COPY tests/ tests/
+COPY config.yml run.sh ./
 
 USER appuser
 
 ENTRYPOINT ["python"]
-CMD ["plot_throughput.py", "--help"]
+CMD ["-m", "plot.throughput", "--help"]
